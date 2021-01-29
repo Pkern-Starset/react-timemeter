@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 
 let prevColor = null
 const randomColor = (colors) => {
@@ -159,6 +160,12 @@ const getDotPosInPx = (times, width) => {
 }
 
 export class Timemeter extends Component {
+  static propTypes = {
+    times: PropTypes.array,
+    colorMode: PropTypes.string,
+    colors: PropTypes.array
+  }
+
   constructor(props) {
     super(props)
     // times can given in any order, so we want to pre-sort the prop
