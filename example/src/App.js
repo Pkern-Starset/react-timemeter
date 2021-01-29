@@ -2,25 +2,6 @@ import React, { Component } from "react";
 import { Timemeter } from "react-timemeter";
 
 class App extends Component {
-  state = {
-    maxHour: 23,
-    maxMinute: 1
-  }
-
-  componentDidMount() {
-    /*setInterval(() => {
-      if(this.state.maxMinute + 1 > 60) {
-        this.setState({
-          maxMinute: 0,
-          maxHour: this.state.maxHour +1
-        })
-      } else {
-        this.setState({
-          maxMinute: this.state.maxMinute +60
-        })
-      }
-    }, 20);*/
-  }
 
   render() {
     const times = [

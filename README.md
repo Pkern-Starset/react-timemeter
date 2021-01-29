@@ -15,7 +15,7 @@ npm install --save react-timemeter
 ```jsx
 import React, { Component } from 'react'
 
-import TimeMeter from 'react-timemeter'
+import Timemeter from 'react-timemeter'
 
 class Example extends Component {
   render() {
