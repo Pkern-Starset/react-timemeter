@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { DayTimeline } from "react-timemeter";
+import { Timemeter } from "react-timemeter";
 
 class App extends Component {
   state = {
@@ -30,7 +30,7 @@ class App extends Component {
       new Date(1000 * 60 * 60 * 38 + 1000 * 60 * 17)
     ];
     return (
-      <DayTimeline times={times} colors={['#22ddff', '#92db5f']}/>
+      <Timemeter times={times} colors={['#22ddff', '#92db5f']}/>
     );
   }
 }

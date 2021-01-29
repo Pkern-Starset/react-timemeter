@@ -1,8 +1,8 @@
-# react-day-timeline
+# react-timemeter
 
 > A react component to display events of a daily basis.
 
-[![NPM](https://img.shields.io/npm/v/react-day-timeline.svg)](https://www.npmjs.com/package/react-day-timeline) [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
+[![NPM](https://img.shields.io/npm/v/react-timemeter.svg)](https://www.npmjs.com/package/react-timemeter) [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
 
 ## Install
 
@@ -15,16 +15,24 @@ npm install --save react-timemeter
 ```jsx
 import React, { Component } from 'react'
 
-import MyComponent from 'react-timemeter'
-import 'react-day-timeline/dist/index.css'
+import TimeMeter from 'react-timemeter'
 
 class Example extends Component {
   render() {
-    return <MyComponent />
+    const times = [
+      new Date(1000 * 60 * 60 * 12 + 1000 * 60 * 26),
+      new Date(1000 * 60 * 60 * 22 + 1000 * 60 * 48),
+      new Date(1000 * 60 * 60 * 28 + 1000 * 60 * 38),
+      new Date(1000 * 60 * 60 * 38 + 1000 * 60 * 17)
+    ];
+
+    return (
+      <Timemeter times={times} colors={['#22ddff', '#92db5f']}/>
+    );
   }
 }
 ```
 
 ## License
 
-MIT © [Pkern-Starset](https://github.com/Pkern-Starset)
+MIT © [Pkern-Starset](https://github.com/Pkern-Starset) / [Pkern](https://gitlab.com/paskern)

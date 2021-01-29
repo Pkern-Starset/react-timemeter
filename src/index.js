@@ -154,7 +154,7 @@ const getDotPosInPx = (times, width) => {
 
 let previousTimeAreaXValue = 0
 
-export class DayTimeline extends Component {
+export class Timemeter extends Component {
   constructor(props) {
     super(props)
     // times can given in any order, so we want to pre-sort the prop

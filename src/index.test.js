@@ -1,7 +1,7 @@
-import { DayTimeline } from '.'
+import { Timemeter } from '.'
 
 describe('ExampleComponent', () => {
   it('is truthy', () => {
-    expect(DayTimeline).toBeTruthy()
+    expect(Timemeter).toBeTruthy()
   })
 })
