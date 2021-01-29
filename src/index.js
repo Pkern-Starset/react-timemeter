@@ -10,6 +10,14 @@ const randomColor = (colors) => {
   return value
 }
 
+const selectColor = (colors, colorMode, index) => {
+  if (colorMode === 'repeat') {
+    return colors[index % colors.length]
+  } else {
+    return randomColor(colors)
+  }
+}
+
 const calcTimeWithinADay = (date) => {
   // returns the milliseconds starting from 00:00 AM up to 12 PM
   return date.getTime()
@@ -57,9 +65,7 @@ const createDot = (px, baseline, height) => {
 
 // returns the area with given start-x, end-x and height in px, filled with the given html-color
 const timeArea = (xStart, xEnd, height, color) => {
-  if (xEnd - xStart === -499) {
-    console.log('HEY!')
-  }
+  console.log(xStart, xEnd, height, color)
   return (
     <rect
       key={'rect-' + xStart + xEnd + height + color}
@@ -106,19 +112,19 @@ const getTimeAreaXPosInPx = (listOfTimes, width) => {
   let retWidth = 0 // mem the current return value
   const timeSpanMax = calcTimeWithinADay(listOfTimes[listOfTimes.length - 1])
   const timeSpanMin = calcTimeWithinADay(listOfTimes[0])
-  return listOfTimes.map((e, i) => {
-    if (i === 0) {
-      return 0
-    } else if (i === listOfTimes.length - 1) {
-      console.log(width)
-      return width
-    } else {
-      const ratio = width / (timeSpanMax - timeSpanMin)
-      retWidth = ratio * (calcTimeWithinADay(listOfTimes[i]) - timeSpanMin)
-      console.log(retWidth)
-      return retWidth
-    }
-  })
+  return listOfTimes
+    .map((e, i) => {
+      if (i === 0) {
+        return null
+      } else if (i === listOfTimes.length - 1) {
+        return width
+      } else {
+        const ratio = width / (timeSpanMax - timeSpanMin)
+        retWidth = ratio * (calcTimeWithinADay(listOfTimes[i]) - timeSpanMin)
+        return retWidth
+      }
+    })
+    .filter((e) => e != null)
 }
 
 // returns the position of every rectangular dot on the baseline
@@ -152,8 +158,6 @@ const getDotPosInPx = (times, width) => {
   return retArray
 }
 
-let previousTimeAreaXValue = 0
-
 export class Timemeter extends Component {
   constructor(props) {
     super(props)
@@ -174,7 +178,6 @@ export class Timemeter extends Component {
   componentDidMount() {
     // we want to save the actual width and height of the svg
     this.setWidthAndHeight()
-    console.log('mount')
   }
 
   setWidthAndHeight() {
@@ -186,9 +189,9 @@ export class Timemeter extends Component {
   render() {
     const previousX = null
     const { width, height } = this.state
-    const { colors, times } = this.props
+    const { colors, times, colorMode } = this.props
     const baselineYVal = height - 50
-    console.log('render!')
+    let previousTimeAreaXValue = 0
     return (
       <div style={containerStyle}>
         <svg
@@ -201,12 +204,12 @@ export class Timemeter extends Component {
         >
           {
             // draw all the time areas with given times
-            getTimeAreaXPosInPx(times, width).map((px) => {
+            getTimeAreaXPosInPx(times, width).map((px, index) => {
               const area = timeArea(
                 previousTimeAreaXValue,
                 px + 1, // we add +1 to make sure there are no vertical glitchy lines
                 baselineYVal,
-                randomColor(colors) // select a random color
+                selectColor(colors, colorMode, index)
               )
               previousTimeAreaXValue = px // mem the current x value in px
               return area
