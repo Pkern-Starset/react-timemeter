@@ -18,7 +18,7 @@ class App extends Component {
     return (
       <>
         <Timemeter times={[new Date(), new Date(), new Date()]}/>
-        <Timemeter times={times} colors={['#22ddff', '#92db5f', '#e25353']} />
+        <Timemeter times={times} colors={['#22ddff', '#92db5f', '#e25353']} colorMode={'repeat'} />
       </>
     );
   }

@@ -4,6 +4,14 @@ import PropTypes from 'prop-types'
 let prevColor = null
 const defaultColors = ['gray', 'lightgray']
 
+const removeDuplicates = (array) => {
+  const seen = {}
+  return array.filter((item) =>
+    // eslint-disable-next-line no-prototype-builtins
+    seen.hasOwnProperty(item) ? false : (seen[item] = true)
+  )
+}
+
 const randomColor = (colors) => {
   let value
   do {
@@ -54,8 +62,11 @@ const containerStyle = {
 
 // return dateTime as text in format "hh:mm" at position x, y
 const text = (x, y, time) => {
+  if (!time) {
+    return null
+  }
   return (
-    <text key={'text-' + time.getTime()} x={x} y={y} fill='black'>
+    <text key={uuidv4()} x={x} y={y} fill='black'>
       {formatDateToSimpleTime(time)}
     </text>
   )
@@ -65,7 +76,7 @@ const text = (x, y, time) => {
 const createDot = (px, baseline, height) => {
   return (
     <rect
-      key={'rect-' + px + height}
+      key={uuidv4()}
       x={px}
       y={baseline - height}
       height={height}
@@ -79,7 +90,7 @@ const createDot = (px, baseline, height) => {
 const timeArea = (xStart, xEnd, height, color) => {
   return (
     <rect
-      key={'rect-' + xStart + xEnd + height + color}
+      key={uuidv4()}
       x={xStart}
       width={xEnd - xStart}
       y={0}
@@ -104,9 +115,13 @@ const getTimeTextXPosInPx = (listOfTimes, width) => {
   }
   const timeSpanMax = calcTimeWithinADay(listOfTimes[listOfTimes.length - 1])
   const timeSpanMin = calcTimeWithinADay(listOfTimes[0])
+  let totalSpan = timeSpanMax - timeSpanMin
+  if (totalSpan === 0) {
+    totalSpan = 0
+  }
   let prevXPos = 0
   return listOfTimes.map((timeElement, index) => {
-    const ratio = width / (timeSpanMax - timeSpanMin) // calc the perc. part of the time of the full day
+    const ratio = width / totalSpan // calc the perc. part of the time of the full day
     if (index === 0) {
       return 0
     } else if (index === listOfTimes.length - 1) {
@@ -151,13 +166,16 @@ const getDotPosInPx = (times, width) => {
   }
   const maxMinutes = calcMinutesWithinAMonth(times[times.length - 1])
   const minMinutes = calcMinutesWithinAMonth(times[0])
-  const totalMinutes = maxMinutes - minMinutes
+  let totalMinutes = maxMinutes - minMinutes
+  if (totalMinutes === 0) {
+    totalMinutes = 1
+  }
   const dotNumber = Math.floor((maxMinutes - minMinutes) / 60) + 2
   const minutesRatio = width / totalMinutes
   const retArray = []
   retArray[0] = { x: 0, height: 10 }
-  retArray[dotNumber] = { x: width - 1, height: 10 }
-  for (let i = 1; i < dotNumber; i++) {
+  retArray[dotNumber - 1] = { x: width - 1, height: 10 }
+  for (let i = 1; i < dotNumber - 1; i++) {
     if (i === 1) {
       retArray[i] = {
         x: (60 - times[0].getUTCMinutes()) * minutesRatio,
@@ -178,6 +196,14 @@ const getDotPosInPx = (times, width) => {
   return retArray
 }
 
+const uuidv4 = () => {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+    var r = (Math.random() * 16) | 0
+    var v = c === 'x' ? r : r ? 0x3 : 0x8
+    return v.toString(16)
+  })
+}
+
 export class Timemeter extends Component {
   static propTypes = {
     times: PropTypes.array,
@@ -190,11 +216,16 @@ export class Timemeter extends Component {
     let sortedTimes = []
     // times can given in any order, so we want to pre-sort the prop
     if (props.times) {
-      sortedTimes = props.times.sort((e, i) => e.getTime() - i.getTime())
+      sortedTimes = removeDuplicates(
+        props.times.sort((e, i) => e.getTime() - i.getTime())
+      )
     }
 
-    // mem the previous x value of a time-area
-    const filteredColors = [...new Set(props.colors)]
+    let filteredColors = defaultColors
+    if (props.colors) {
+      // mem the previous x value of a time-area
+      filteredColors = removeDuplicates(props.colors)
+    }
 
     this.state = {
       times: sortedTimes,
@@ -217,8 +248,8 @@ export class Timemeter extends Component {
 
   render() {
     const previousX = null
-    const { width, height } = this.state
-    const { colors, times, colorMode } = this.props
+    const { width, height, times, colors } = this.state
+    const { colorMode } = this.props
     const baselineYVal = height - 50
     let previousTimeAreaXValue = 0
     return (
