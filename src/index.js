@@ -66,7 +66,6 @@ const createDot = (px, baseline, height) => {
 
 // returns the area with given start-x, end-x and height in px, filled with the given html-color
 const timeArea = (xStart, xEnd, height, color) => {
-  console.log(xStart, xEnd, height, color)
   return (
     <rect
       key={'rect-' + xStart + xEnd + height + color}
