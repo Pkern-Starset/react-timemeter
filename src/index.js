@@ -55,7 +55,7 @@ const styles = {
   margin: 'auto'
 }
 
-const containerStyle = {
+const defaultContainerStyle = {
   width: '500px',
   height: '100px'
 }
@@ -241,10 +241,13 @@ export class Timemeter extends Component {
 
   render() {
     const previousX = null
-    const { width, height } = this.state
+    const { width, height, colorMode } = this.props
+    const containerStyle = {
+      width: width || defaultContainerStyle.width,
+      height: height || defaultContainerStyle.height
+    }
     const times = this.clearTimes(this.props.times)
     const colors = removeDuplicates(this.props.colors)
-    const { colorMode } = this.props
     const baselineYVal = height - 50
     let previousTimeAreaXValue = 0
     return (
