@@ -213,23 +213,8 @@ export class Timemeter extends Component {
 
   constructor(props) {
     super(props)
-    let sortedTimes = []
-    // times can given in any order, so we want to pre-sort the prop
-    if (props.times) {
-      sortedTimes = removeDuplicates(
-        props.times.sort((e, i) => e.getTime() - i.getTime())
-      )
-    }
-
-    let filteredColors = defaultColors
-    if (props.colors) {
-      // mem the previous x value of a time-area
-      filteredColors = removeDuplicates(props.colors)
-    }
 
     this.state = {
-      times: sortedTimes,
-      colors: filteredColors,
       height: 50,
       width: 500
     }
@@ -246,9 +231,19 @@ export class Timemeter extends Component {
     this.setState({ width, height })
   }
 
+  clearTimes(times) {
+    // times can given in any order, so we want to pre-sort the prop
+    if (times) {
+      return removeDuplicates(times.sort((e, i) => e.getTime() - i.getTime()))
+    }
+    return []
+  }
+
   render() {
     const previousX = null
-    const { width, height, times, colors } = this.state
+    const { width, height } = this.state
+    const times = this.clearTimes(this.props.times)
+    const colors = removeDuplicates(this.props.colors)
     const { colorMode } = this.props
     const baselineYVal = height - 50
     let previousTimeAreaXValue = 0
