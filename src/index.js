@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 
 let prevColor = null
+const defaultColors = ['gray', 'lightgray']
+
 const randomColor = (colors) => {
   let value
   do {
@@ -12,6 +14,9 @@ const randomColor = (colors) => {
 }
 
 const selectColor = (colors, colorMode, index) => {
+  if (!colors || colors.length === 0) {
+    colors = defaultColors
+  }
   if (colorMode === 'repeat') {
     return colors[index % colors.length]
   } else {
@@ -20,14 +25,20 @@ const selectColor = (colors, colorMode, index) => {
 }
 
 const calcTimeWithinADay = (date) => {
-  // returns the milliseconds starting from 00:00 AM up to 12 PM
-  return date.getTime()
+  if (date) {
+    // returns the milliseconds starting from 00:00 AM up to 12 PM
+    return date.getTime()
+  }
 }
 
 const calcMinutesWithinAMonth = (date) => {
-  return (
-    date.getUTCDate() * 24 * 60 + date.getUTCHours() * 60 + date.getUTCMinutes()
-  )
+  if (date) {
+    return (
+      date.getUTCDate() * 24 * 60 +
+      date.getUTCHours() * 60 +
+      date.getUTCMinutes()
+    )
+  }
 }
 
 const styles = {
@@ -88,6 +99,9 @@ const formatDateToSimpleTime = (time) => {
 
 // returns the x-position for the time beneath the baseline
 const getTimeTextXPosInPx = (listOfTimes, width) => {
+  if (!listOfTimes || listOfTimes.length === 0) {
+    return []
+  }
   const timeSpanMax = calcTimeWithinADay(listOfTimes[listOfTimes.length - 1])
   const timeSpanMin = calcTimeWithinADay(listOfTimes[0])
   let prevXPos = 0
@@ -109,6 +123,9 @@ const getTimeTextXPosInPx = (listOfTimes, width) => {
 
 // returns an array of the x positions for each date object
 const getTimeAreaXPosInPx = (listOfTimes, width) => {
+  if (!listOfTimes || listOfTimes.length === 0) {
+    return []
+  }
   let retWidth = 0 // mem the current return value
   const timeSpanMax = calcTimeWithinADay(listOfTimes[listOfTimes.length - 1])
   const timeSpanMin = calcTimeWithinADay(listOfTimes[0])
@@ -129,6 +146,9 @@ const getTimeAreaXPosInPx = (listOfTimes, width) => {
 
 // returns the position of every rectangular dot on the baseline
 const getDotPosInPx = (times, width) => {
+  if (!times || times.length === 0) {
+    return []
+  }
   const maxMinutes = calcMinutesWithinAMonth(times[times.length - 1])
   const minMinutes = calcMinutesWithinAMonth(times[0])
   const totalMinutes = maxMinutes - minMinutes
@@ -167,8 +187,11 @@ export class Timemeter extends Component {
 
   constructor(props) {
     super(props)
+    let sortedTimes = []
     // times can given in any order, so we want to pre-sort the prop
-    const sortedTimes = props.times.sort((e, i) => e.getTime() - i.getTime())
+    if (props.times) {
+      sortedTimes = props.times.sort((e, i) => e.getTime() - i.getTime())
+    }
 
     // mem the previous x value of a time-area
     const filteredColors = [...new Set(props.colors)]
@@ -208,6 +231,11 @@ export class Timemeter extends Component {
           width='100%'
           height='100%'
         >
+          {!times || times.length === 0 ? (
+            <text x={width / 2 - 69} y={baselineYVal - 15}>
+              No times to display
+            </text>
+          ) : null}
           {
             // draw all the time areas with given times
             getTimeAreaXPosInPx(times, width).map((px, index) => {
