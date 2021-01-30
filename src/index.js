@@ -5,6 +5,9 @@ let prevColor = null
 const defaultColors = ['gray', 'lightgray']
 
 const removeDuplicates = (array) => {
+  if (!array || array.length === 0) {
+    return []
+  }
   const seen = {}
   return array.filter((item) =>
     // eslint-disable-next-line no-prototype-builtins
@@ -56,8 +59,8 @@ const styles = {
 }
 
 const defaultContainerStyle = {
-  width: '500px',
-  height: '100px'
+  width: 500,
+  height: 100
 }
 
 // return dateTime as text in format "hh:mm" at position x, y
@@ -205,18 +208,21 @@ const uuidv4 = () => {
 }
 
 export class Timemeter extends Component {
+  svgId = null
+
   static propTypes = {
     times: PropTypes.array,
     colorMode: PropTypes.string,
-    colors: PropTypes.array
+    colors: PropTypes.array,
+    style: PropTypes.object
   }
 
   constructor(props) {
     super(props)
-
+    this.svgId = uuidv4()
     this.state = {
-      height: 50,
-      width: 500
+      width: 500,
+      height: 50
     }
   }
 
@@ -226,8 +232,8 @@ export class Timemeter extends Component {
   }
 
   setWidthAndHeight() {
-    const height = document.getElementById('container').clientHeight
-    const width = document.getElementById('container').clientWidth
+    const height = document.getElementById(this.svgId).clientHeight
+    const width = document.getElementById(this.svgId).clientWidth
     this.setState({ width, height })
   }
 
@@ -241,19 +247,20 @@ export class Timemeter extends Component {
 
   render() {
     const previousX = null
-    const { width, height, colorMode } = this.props
-    const containerStyle = {
-      width: width || defaultContainerStyle.width,
-      height: height || defaultContainerStyle.height
-    }
+    const { width, height } = this.state
+    const { colorMode, style } = this.props
+
+    let colors = this.props.colors
     const times = this.clearTimes(this.props.times)
-    const colors = removeDuplicates(this.props.colors)
+    if (colors) {
+      colors = removeDuplicates(this.props.colors)
+    }
     const baselineYVal = height - 50
     let previousTimeAreaXValue = 0
     return (
-      <div style={containerStyle}>
+      <div style={style || defaultContainerStyle}>
         <svg
-          id='container'
+          id={this.svgId}
           style={styles}
           version='1.1'
           baseProfile='full'
