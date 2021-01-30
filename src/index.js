@@ -240,7 +240,9 @@ export class Timemeter extends Component {
   clearTimes(times) {
     // times can given in any order, so we want to pre-sort the prop
     if (times) {
-      return removeDuplicates(times.sort((e, i) => e.getTime() - i.getTime()))
+      return removeDuplicates(
+        times.filter((e) => !!e).sort((e, i) => e.getTime() - i.getTime())
+      )
     }
     return []
   }
