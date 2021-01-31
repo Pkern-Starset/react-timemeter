@@ -41,6 +41,15 @@ class Example extends Component {
 }
 ```
 
+![img of the react-timemeter](https://github.com/Pkern-Starset/react-timemeter/blob/master/example/images/react-timemeter.png?raw=true "example from above")
+
+| Property | default | possible values |  desc |
+| --- | --- | --- | --- |
+| times | [ ] | / | the date objects shown in the timemeter, will be sorted and filtered automatically |
+| colors | ['gray', 'lightgray'] | / | the colors that will be used to display the time-spans |
+| colorMode | 'random' | 'random' or 'repeat' | the color mode which decides which color to use. "random" means, any color without choosing colors twice in a row <br> 'repeat' means, repeat the colors in the order they are given. Will repeated endlessly
+
+
 ## License
 
 MIT © [Pkern-Starset](https://github.com/Pkern-Starset) / [Pkern](https://gitlab.com/paskern)
