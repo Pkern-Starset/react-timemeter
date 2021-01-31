@@ -15,10 +15,11 @@ class App extends Component {
       new Date(1000 * 60 * 60 * 60 + 1000 * 60 * 17),
       new Date(1000 * 60 * 60 * 66 + 1000 * 60 * 17),
     ];
+
     return (
       <>
-        <Timemeter times={[new Date(), null, null]} />
-        <Timemeter times={times} colors={['#22ddff', '#92db5f', '#e25353']} colorMode={'repeat'} />
+        <Timemeter times={times} />
+        <Timemeter times={times} colors={['#22ddff', '#92db5f']} colorMode={'repeat'}/>
       </>
     );
   }
