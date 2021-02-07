@@ -1,6 +1,6 @@
 # react-timemeter
 
-> A react component to display time spans within a day or even a month
+> A react component to display time spans within a day or even a month. Greater timespans are not guaranteed to work.
 
 [![NPM](https://img.shields.io/npm/v/react-timemeter.svg)](https://www.npmjs.com/package/react-timemeter) [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
 
